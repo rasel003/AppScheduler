@@ -1,12 +1,11 @@
 package com.rasel.appscheduler
 
-import android.content.Context
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.rasel.appscheduler.databinding.ActivityMainBinding
 
 
@@ -20,40 +19,21 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main) as ActivityMainBinding
         setContentView(binding.root)
 
-        val installedApps = getInstalledApps(this)
+        setSupportActionBar(binding.toolbar)
 
-        var text = ""
+        // val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        // val navView: NavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host_fragment)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
 
-        installedApps?.forEachIndexed { index, packageInfo ->
-            text += "\n"+ index + packageInfo.packageName
-        }
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.nav_home),
+            binding.drawerLayout
+        )
 
-        binding.mainText.text = text
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
     }
 
-
-    fun getInstalledApps(ctx: Context): Set<PackageInfo>? {
-        val packageManager: PackageManager = ctx.getPackageManager()
-        val allInstalledPackages = packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
-        val filteredPackages: MutableSet<PackageInfo> = HashSet()
-        val defaultActivityIcon = packageManager.defaultActivityIcon
-        for (each in allInstalledPackages) {
-            if (ctx.getPackageName().equals(each.packageName)) {
-                continue  // skip own app
-            }
-            try {
-                // add only apps with application icon
-                val intentOfStartActivity =
-                    packageManager.getLaunchIntentForPackage(each.packageName)
-                        ?: continue
-                val applicationIcon = packageManager.getActivityIcon(intentOfStartActivity)
-                if (applicationIcon != null && defaultActivityIcon != applicationIcon) {
-                    filteredPackages.add(each)
-                }
-            } catch (e: PackageManager.NameNotFoundException) {
-                Log.i("MyTag", "Unknown package name " + each.packageName)
-            }
-        }
-        return filteredPackages
-    }
 }
