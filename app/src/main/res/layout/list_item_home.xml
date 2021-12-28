@@ -11,7 +11,7 @@
             type="android.view.View.OnClickListener" />
 
         <variable
-            name="photo"
+            name="currentAlarm"
             type="com.rasel.appscheduler.data.db.entities.CurrentAlarm" />
     </data>
 
@@ -26,34 +26,87 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/plant_photo"
+                android:id="@+id/imgLauncherIcon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_add"
-                tools:src="@tools:sample/avatars"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/tvAppName"
+                tools:src="@tools:sample/avatars" />
 
             <TextView
-                android:id="@+id/photographer"
+                android:id="@+id/tvAppName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@{photo.packageName}"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceListItem"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/plant_photo"
-                app:layout_constraintTop_toTopOf="@+id/plant_photo"
+                app:layout_constraintEnd_toStartOf="@+id/imgEdit"
+                app:layout_constraintStart_toEndOf="@+id/imgLauncherIcon"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Sunny F." />
 
-          <!--  <com.google.android.material.button.MaterialButton
+            <TextView
+                android:id="@+id/tvPackageName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{currentAlarm.packageName}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintEnd_toStartOf="@+id/imgEdit"
+                app:layout_constraintStart_toEndOf="@+id/imgLauncherIcon"
+                app:layout_constraintTop_toBottomOf="@+id/tvAppName"
+                tools:text="Sunny F." />
+
+            <TextView
+                android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@{currentAlarm.packageName}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgLauncherIcon"
+                app:layout_constraintTop_toBottomOf="@+id/tvPackageName"
+                tools:text="Sunny F." />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@{currentAlarm.status}"
+                android:textAppearance="?attr/textAppearanceListItem"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/imgEdit"
+                app:layout_constraintTop_toBottomOf="@+id/tvPackageName"
+                tools:text="status" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_edit"
                 android:text="Select"
-                app:layout_constraintEnd_toEndOf="parent" />-->
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -9,49 +9,112 @@ import android.content.pm.PackageInfo
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.rasel.appscheduler.data.db.AppDatabase
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-//        val message = "Hellooo, alrm worked ----"
-//        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-//        val intent2 = Intent(context, TripNotification::class.java)
-//        intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//        context.startActivity(intent2)
+
+        Log.d("rsl", "Alarm received : "+intent.`package`)
 
         val launcherIntent: Intent? = intent.`package`?.let {
             context.packageManager.getLaunchIntentForPackage(
                 it
             )
         }
+        intent.`package`?.let { AppDatabase.invoke(context).getCurrentAlarmDao().updateStatus(it, ExecutionStatus.STARTED.status) }
+
         if (launcherIntent != null) {
             ContextCompat.startActivity(context, launcherIntent, null)
         }
     }
 
-    fun setAlarm(context: Context, plant: PackageInfo, hour: Int, minute: Int) {
-        Log.d("Carbon", "Alrm SET !!")
+    fun setAlarm(
+        context: Context,
+        packageInfo: PackageInfo,
+        hour: Int,
+        minute: Int,
+        requestCode: Int
+    ) {
+        Log.d("rsl", "Alarm SET !!")
 
         // get a Calendar object with current time
         val cal: Calendar = Calendar.getInstance()
         cal.set(Calendar.HOUR_OF_DAY, hour)
         cal.set(Calendar.MINUTE, minute)
 
-        // add 30 seconds to the calendar object
-        //  cal.add(Calendar.MINUTE, 1)
-
-
         val intent = Intent(context, AlarmReceiver::class.java)
-        intent.setPackage(plant.packageName)
+        intent.setPackage(packageInfo.packageName)
         val senderIntent = PendingIntent.getBroadcast(
             context,
-            192837,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         // Get the AlarmManager service
-        val am = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
-        am[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+        val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+        alarmManager[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+    }
+
+
+    fun updateAlarm(
+        context: Context,
+        packageName: String,
+        hour: Int,
+        minute: Int,
+        requestCode: Int
+    ) {
+        Log.d("rsl", "Alarm SET !!")
+
+        // get a Calendar object with current time
+        val cal: Calendar = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, hour)
+        cal.set(Calendar.MINUTE, minute)
+
+        val intent = Intent(context, AlarmReceiver::class.java)
+        intent.setPackage(packageName)
+        val senderIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // Get the AlarmManager service
+        val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+        alarmManager[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+    }
+
+    fun cancelAlarm(
+        context: Context,
+        packageName: String,
+        hour: Int,
+        minute: Int,
+        requestCode: Int
+    ) {
+        Log.d("rsl", "Alarm Canceled !!")
+
+        // get a Calendar object with current time
+        val cal: Calendar = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, hour)
+        cal.set(Calendar.MINUTE, minute)
+
+
+        val intent = Intent(context, AlarmReceiver::class.java)
+        intent.setPackage(packageName)
+        val senderIntent = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        // Get the AlarmManager service
+        val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
+
+        alarmManager.cancel(senderIntent)
+
+
     }
 }

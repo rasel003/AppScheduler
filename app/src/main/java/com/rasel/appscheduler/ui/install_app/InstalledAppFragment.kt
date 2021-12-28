@@ -6,22 +6,28 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.rasel.appscheduler.databinding.FragmentInstalledAppListBinding
 import com.rasel.appscheduler.ui.util.AlarmReceiver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import java.util.*
+import kotlin.collections.HashSet
 
 @AndroidEntryPoint
 class InstalledAppFragment : Fragment() {
 
     private lateinit var binding: FragmentInstalledAppListBinding
-    private var searchJob: Job? = null
     private val viewModel: InstalledAppViewModel by viewModels()
 
     override fun onCreateView(
@@ -39,7 +45,7 @@ class InstalledAppFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val adapter = InstalledAppList{ packageInfo: PackageInfo ->
+        val adapter = InstalledAppList { packageInfo: PackageInfo ->
 
             val picker = MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -52,18 +58,24 @@ class InstalledAppFragment : Fragment() {
             picker.addOnPositiveButtonClickListener {
                 // call back code
                 val hour = picker.hour;
-                val minute  = picker.minute;
+                val minute = picker.minute;
 
-                viewModel.addData(packageInfo, hour, minute)
+                val requestCode: Int = (0..1000000000).random()
+                viewModel.addData(packageInfo, hour, minute, requestCode)
 
-                context?.let { it1 -> AlarmReceiver().setAlarm(it1, packageInfo, hour, minute) }
+                context?.let { it1 ->
+                    AlarmReceiver().setAlarm(it1, packageInfo, hour, minute, requestCode)
+                    Toast.makeText(it1, "Schedule Added", Toast.LENGTH_SHORT).show()
+
+                    val navController = Navigation.findNavController(view)
+                    navController.navigateUp()
+                }
 
             }
         }
 
 
         binding.recyclerview.adapter = adapter
-        // searchInstalledApp(args.plantName)
 
         val installedApps = context?.let { getInstalledApps(it) }
 
@@ -74,15 +86,12 @@ class InstalledAppFragment : Fragment() {
 
     }
 
-    /*private fun searchInstalledApp(query: String) {
-        // Make sure we cancel the previous job before creating a new one
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.searchPictures(query).collectLatest {
-                adapter.submitData(it)
-            }
-        }
-    }*/
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            findNavController().navigateUp()
+            return true
+        } else return super.onOptionsItemSelected(item)
+    }
 
     private fun getInstalledApps(ctx: Context): Set<PackageInfo>? {
         val packageManager: PackageManager = ctx.packageManager
@@ -95,7 +104,8 @@ class InstalledAppFragment : Fragment() {
             }
             try {
                 // add only apps with application icon
-                val intentOfStartActivity = packageManager.getLaunchIntentForPackage(each.packageName) ?: continue
+                val intentOfStartActivity =
+                    packageManager.getLaunchIntentForPackage(each.packageName) ?: continue
                 val applicationIcon = packageManager.getActivityIcon(intentOfStartActivity)
                 if (defaultActivityIcon != applicationIcon) {
                     filteredPackages.add(each)

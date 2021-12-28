@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rasel.appscheduler.databinding.ListItemInstallAppBinding
+import com.rasel.appscheduler.ui.util.getAppNameFromPkgName
 
 class InstalledAppList(
     private val onItemClicked: (PackageInfo) -> Unit
@@ -43,8 +44,8 @@ class InstalledAppList(
                     onItemClicked(plant)
                 }
             }
-
-            binding.imgLauncherIcon.setImageDrawable( packageInfo.applicationInfo.loadIcon(binding.photographer.context.packageManager))
+            binding.tvAppName.text = getAppNameFromPkgName(binding.tvAppName.context, packageInfo.packageName)
+            binding.imgLauncherIcon.setImageDrawable( packageInfo.applicationInfo.loadIcon(binding.tvPackageName.context.packageManager))
         }
     }
 }

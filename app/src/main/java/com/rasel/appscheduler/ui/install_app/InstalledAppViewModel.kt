@@ -13,11 +13,10 @@ class InstalledAppViewModel @Inject constructor(
     private val repository: UserRepository
 ) : ViewModel() {
 
-    fun addData(packageInfo: PackageInfo, hour: Int, minute: Int) {
+    fun addData(packageInfo: PackageInfo, hour: Int, minute: Int, requestCode: Int) {
         viewModelScope.launch {
-            repository.addData(packageInfo, hour, minute)
+            repository.addData(packageInfo, hour, minute, requestCode)
         }
     }
-
     private var currentQueryValue: String? = null
 }

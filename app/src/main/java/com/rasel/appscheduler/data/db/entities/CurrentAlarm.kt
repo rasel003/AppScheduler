@@ -7,8 +7,10 @@ import androidx.room.PrimaryKey
 data class CurrentAlarm(
 
     val title: String,
+    val status: String,
     val hour: Int,
     val minute: Int,
+    val requestCode: Int,
 
     @PrimaryKey(autoGenerate = false)
     val packageName: String
