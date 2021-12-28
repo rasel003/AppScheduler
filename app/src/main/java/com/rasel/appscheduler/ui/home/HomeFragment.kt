@@ -63,7 +63,6 @@ class HomeFragment : Fragment(), HomeAdapterListener {
             .setTitleText("Select New StartTime time")
             .build()
 
-
         picker.show(childFragmentManager, "rsl")
 
         picker.addOnPositiveButtonClickListener {
@@ -77,7 +76,6 @@ class HomeFragment : Fragment(), HomeAdapterListener {
 
             }
         }
-        context?.let { viewModel.deleteSchedule(currentAlarm, it) }
 
     }
 

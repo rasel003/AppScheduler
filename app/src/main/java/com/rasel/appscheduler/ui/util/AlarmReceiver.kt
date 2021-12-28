@@ -13,20 +13,24 @@ import com.rasel.appscheduler.data.db.AppDatabase
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
+
+    private val TAG = "AlarmReceiver"
+
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.d("rsl", "Alarm received : "+intent.`package`)
+        Log.d(TAG, "Alarm received : "+intent.`package`)
 
         val launcherIntent: Intent? = intent.`package`?.let {
             context.packageManager.getLaunchIntentForPackage(
                 it
             )
         }
-        intent.`package`?.let { AppDatabase.invoke(context).getCurrentAlarmDao().updateStatus(it, ExecutionStatus.STARTED.status) }
-
         if (launcherIntent != null) {
             ContextCompat.startActivity(context, launcherIntent, null)
         }
+
+        intent.`package`?.let { AppDatabase.invoke(context).getCurrentAlarmDao().updateStatus(it, ExecutionStatus.STARTED.status) }
+
     }
 
     fun setAlarm(
@@ -36,12 +40,13 @@ class AlarmReceiver : BroadcastReceiver() {
         minute: Int,
         requestCode: Int
     ) {
-        Log.d("rsl", "Alarm SET !!")
+        Log.d(TAG, "setAlarm: ${packageInfo.packageName}")
 
         // get a Calendar object with current time
         val cal: Calendar = Calendar.getInstance()
         cal.set(Calendar.HOUR_OF_DAY, hour)
         cal.set(Calendar.MINUTE, minute)
+        cal.set(Calendar.SECOND, 0)
 
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.setPackage(packageInfo.packageName)
@@ -65,12 +70,13 @@ class AlarmReceiver : BroadcastReceiver() {
         minute: Int,
         requestCode: Int
     ) {
-        Log.d("rsl", "Alarm SET !!")
+        Log.d(TAG, "updateAlarm: $packageName")
 
         // get a Calendar object with current time
         val cal: Calendar = Calendar.getInstance()
         cal.set(Calendar.HOUR_OF_DAY, hour)
         cal.set(Calendar.MINUTE, minute)
+        cal.set(Calendar.SECOND, 0)
 
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.setPackage(packageName)
@@ -93,12 +99,13 @@ class AlarmReceiver : BroadcastReceiver() {
         minute: Int,
         requestCode: Int
     ) {
-        Log.d("rsl", "Alarm Canceled !!")
+        Log.d(TAG, "cancelAlarm: $packageName")
 
         // get a Calendar object with current time
         val cal: Calendar = Calendar.getInstance()
         cal.set(Calendar.HOUR_OF_DAY, hour)
         cal.set(Calendar.MINUTE, minute)
+        cal.set(Calendar.SECOND, 0)
 
 
         val intent = Intent(context, AlarmReceiver::class.java)
