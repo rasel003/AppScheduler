@@ -1,17 +1,18 @@
 package com.rasel.appscheduler.ui.home
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.rasel.appscheduler.data.repositories.UserRepository
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val repository: UserRepository
 ) : ViewModel() {
+
+    fun getAlarmList() = repository.getAlarmList();
+
 
     /*private val _unsplashPhoto = MutableLiveData<List<UnsplashPhoto>>()
 

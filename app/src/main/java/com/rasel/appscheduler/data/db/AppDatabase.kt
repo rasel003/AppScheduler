@@ -19,7 +19,7 @@ import com.rasel.appscheduler.data.db.entities.CurrentAlarm
 //@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun getCurrenntAlarmDao(): CurrentAlarmDao
+    abstract fun getCurrentAlarmDao(): CurrentAlarmDao
 
     companion object {
 

@@ -3,6 +3,7 @@
     package="com.rasel.appscheduler">
 
     <application
+        android:name=".ui.util.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,7 +24,7 @@
         </activity>
 
         <receiver
-            android:name=".ui.install_app.AlarmReceiver"
+            android:name=".ui.util.AlarmReceiver"
             android:process=":remote" />
     </application>
 

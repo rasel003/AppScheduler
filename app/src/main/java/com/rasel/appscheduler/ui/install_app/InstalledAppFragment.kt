@@ -54,7 +54,7 @@ class InstalledAppFragment : Fragment() {
                 val hour = picker.hour;
                 val minute  = picker.minute;
 
-
+                viewModel.addData(packageInfo, hour, minute)
 
                 context?.let { it1 -> AlarmReceiver().setAlarm(it1, packageInfo, hour, minute) }
 
@@ -70,6 +70,8 @@ class InstalledAppFragment : Fragment() {
         if (installedApps != null) {
             adapter.submitList(installedApps.toList())
         }
+
+
     }
 
     /*private fun searchInstalledApp(query: String) {

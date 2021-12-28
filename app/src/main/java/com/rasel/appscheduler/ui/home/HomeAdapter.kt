@@ -57,7 +57,7 @@ class HomeAdapter : ListAdapter<CurrentAlarm, RecyclerView.ViewHolder>(PlantDiff
 private class PlantDiffCallback : DiffUtil.ItemCallback<CurrentAlarm>() {
 
     override fun areItemsTheSame(oldItem: CurrentAlarm, newItem: CurrentAlarm): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.packageName == newItem.packageName
     }
 
     override fun areContentsTheSame(oldItem: CurrentAlarm, newItem: CurrentAlarm): Boolean {

@@ -7,8 +7,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.rasel.appscheduler.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -28,8 +30,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
 
         val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home),
-            binding.drawerLayout
+            setOf(R.id.nav_home)
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
