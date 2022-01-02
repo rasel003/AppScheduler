@@ -51,10 +51,10 @@ class HomeViewModel @Inject constructor(
 
         context.let { it1 -> AlarmReceiver().updateAlarm(
             context = it1,
-            packageName = currentAlarm.packageName,
-            hour = currentAlarm.hour,
-            minute = currentAlarm.minute,
-            requestCode = currentAlarm.requestCode
+            packageName = currentAlarmTemp.packageName,
+            hour = currentAlarmTemp.hour,
+            minute = currentAlarmTemp.minute,
+            requestCode = currentAlarmTemp.requestCode
         ) }
     }
 

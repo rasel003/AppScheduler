@@ -1,5 +1,6 @@
 package com.rasel.appscheduler
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -7,12 +8,16 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.rasel.appscheduler.databinding.ActivityMainBinding
+import com.rasel.appscheduler.ui.util.AlarmReceiver
 import dagger.hilt.android.AndroidEntryPoint
+import android.content.IntentFilter
+import com.rasel.appscheduler.ui.util.app_name
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var alarmReceiver: AlarmReceiver
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,18 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+       /* val filter = IntentFilter(app_name)
+
+
+        alarmReceiver = AlarmReceiver()
+        registerReceiver( alarmReceiver,  filter)*/
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+//        unregisterReceiver(alarmReceiver)
     }
 
 }

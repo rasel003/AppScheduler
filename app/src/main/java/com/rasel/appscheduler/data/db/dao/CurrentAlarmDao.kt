@@ -10,16 +10,19 @@ interface CurrentAlarmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(currentAlarm: CurrentAlarm)
 
-    @Delete()
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateAlarm(updatedAlarm: CurrentAlarm)
+
+    @Delete
     suspend fun delete(currentAlarm: CurrentAlarm)
 
-    /*@Query("SELECT * FROM table_current_alarm WHERE id = :id")
-    fun getAlarm(id: Int): LiveData<List<CurrentAlarm>>*/
+    @Query("Delete from table_current_alarm WHERE packageName = :packageName")
+    fun deleteAlarm(packageName: String)
 
     @Query("SELECT * FROM table_current_alarm")
     fun getAlarmList(): LiveData<List<CurrentAlarm>>
 
     @Query("UPDATE table_current_alarm SET status = :status WHERE packageName =:packageName")
-    fun updateStatus(packageName: String, status: String)
+    suspend fun updateStatus(packageName: String, status: String)
 
 }

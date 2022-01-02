@@ -19,8 +19,11 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.rasel.appscheduler.databinding.FragmentInstalledAppListBinding
 import com.rasel.appscheduler.ui.util.AlarmReceiver
+import com.rasel.appscheduler.ui.util.Coroutines
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.HashSet
 
@@ -77,12 +80,18 @@ class InstalledAppFragment : Fragment() {
 
         binding.recyclerview.adapter = adapter
 
-        val installedApps = context?.let { getInstalledApps(it) }
 
-        if (installedApps != null) {
-            adapter.submitList(installedApps.toList())
+        Coroutines.io {
+            val installedApps = context?.let { getInstalledApps(it) }
+
+            withContext(Dispatchers.Main) {
+                if (!installedApps.isNullOrEmpty()) {
+                    binding.tvProgressHit.visibility = View.GONE
+                    binding.progressHorizontal.visibility = View.GONE
+                    adapter.submitList(installedApps.toList())
+                }
+            }
         }
-
 
     }
 

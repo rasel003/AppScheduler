@@ -18,19 +18,19 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.d(TAG, "Alarm received : "+intent.`package`)
+        Log.d(TAG, "Alarm received : " + intent.`package`)
 
         val launcherIntent: Intent? = intent.`package`?.let {
-            context.packageManager.getLaunchIntentForPackage(
-                it
-            )
+            context.packageManager.getLaunchIntentForPackage(  it )
+        }
+        intent.`package`?.let {
+            Coroutines.io {
+                AppDatabase.invoke(context).getCurrentAlarmDao().updateStatus(it, ExecutionStatus.STARTED.status)
+            }
         }
         if (launcherIntent != null) {
             ContextCompat.startActivity(context, launcherIntent, null)
         }
-
-        intent.`package`?.let { AppDatabase.invoke(context).getCurrentAlarmDao().updateStatus(it, ExecutionStatus.STARTED.status) }
-
     }
 
     fun setAlarm(
@@ -59,7 +59,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Get the AlarmManager service
         val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
-        alarmManager[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+        //alarmManager[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.timeInMillis, senderIntent)
     }
 
 
@@ -89,7 +90,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Get the AlarmManager service
         val alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
-        alarmManager[AlarmManager.RTC_WAKEUP, cal.timeInMillis] = senderIntent
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.timeInMillis, senderIntent)
     }
 
     fun cancelAlarm(

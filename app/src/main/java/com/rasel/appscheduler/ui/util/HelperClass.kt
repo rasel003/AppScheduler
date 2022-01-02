@@ -9,7 +9,7 @@ enum class ExecutionStatus(val status: String) {
     STARTED("Started")
 }
 
-public fun getAppNameFromPkgName(context: Context, Packagename: String?): String? {
+fun getAppNameFromPkgName(context: Context, Packagename: String?): String? {
     return try {
         val packageManager: PackageManager = context.packageManager
         val info = packageManager.getApplicationInfo(Packagename!!, PackageManager.GET_META_DATA)
@@ -19,3 +19,6 @@ public fun getAppNameFromPkgName(context: Context, Packagename: String?): String
         ""
     }
 }
+
+
+val app_name = "rsl"
